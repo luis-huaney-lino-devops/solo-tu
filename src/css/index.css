@@ -1,0 +1,182 @@
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
+
+.music-player {
+  max-width: 24rem;
+  margin: 0 auto;
+  padding: 1.5rem;
+  background: #090909;
+  border-radius: 1rem;
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+}
+.card__subtitle {
+  font-family: 'Courier New', Courier, monospace;
+  font-style: italic;
+  font-weight: 400;
+  font-size: 20px;
+  color: #fff;
+  text-align: center;
+  cursor: pointer;
+}
+.player-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 400px;
+  padding: 1rem;
+}
+
+.top-section {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+  gap: 1rem;
+}
+
+.disc-container {
+  border-radius: 50%;
+  background-color: #131313;
+  position: relative;
+  width: 230px;
+  height: 230px;
+}
+
+.disc-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.disc-rotating {
+  animation: rotate 5s linear infinite;
+  animation-play-state: paused;
+}
+
+.disc-rotating.playing {
+  animation-play-state: running;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.volume-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* gap: 1rem; */
+}
+
+.volume-slider {
+  writing-mode: bt-lr;
+  -webkit-appearance: slider-vertical;
+  width: 4px;
+  height: 100px;
+  background: #e5e7eb;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.volume-label {
+  color: white;
+  font-family: 'Dancing Script', cursive;
+  font-size: 1.2rem;
+}
+
+.player-button {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease;
+  color: white;
+}
+
+.player-button:hover {
+  transform: scale(1.1);
+}
+
+.play-button {
+  background: white;
+  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+}
+
+.play-button svg {
+  color: black;
+}
+
+.controls-section {
+  width: 100%;
+  margin-bottom: 2rem;
+}
+
+.time-slider-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.time-label {
+  color: white;
+  font-size: 0.875rem;
+  width: 3rem;
+  text-align: center;
+}
+
+.time-slider {
+  flex-grow: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #e5e7eb;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.time-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: #3b82f6;
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.playback-controls {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.lyrics-section {
+  width: 100%;
+  font-family: 'Dancing Script', cursive;
+  text-align: center;
+}
+
+.lyrics-container {
+  position: relative;
+  height: 5rem;
+  overflow: hidden;
+}
+
+.lyrics-text {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  padding: 0 1rem;
+  color: white;
+  font-size: 1.5rem;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
