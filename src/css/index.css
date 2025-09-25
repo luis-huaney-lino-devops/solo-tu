@@ -1,5 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap");
-.music-player {
+/* .music-player {
   max-width: 80%;
   margin: 0 auto;
   padding: 1.5rem;
@@ -7,7 +6,7 @@
   border-radius: 1rem;
   box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1),
     0 8px 10px -6px rgb(0 0 0 / 0.1);
-}
+} */
 
 .card__subtitle {
   font-family: "Courier New", Courier, monospace;
@@ -71,16 +70,16 @@
 
 .volume-controls {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   /* gap: 1rem; */
 }
 
 .volume-slider {
   writing-mode: bt-lr;
-  -webkit-appearance: slider-vertical;
-  width: 4px;
-  height: 100px;
+  -webkit-appearance: slider-horizontal;
+  width: 200px;
+  height: 4px;
   background: #e5e7eb;
   border-radius: 2px;
   cursor: pointer;
@@ -163,26 +162,4 @@
   justify-content: center;
   gap: 1.5rem;
   margin-top: 1rem;
-}
-
-.lyrics-section {
-  width: 100%;
-  font-family: "Dancing Script", cursive;
-  text-align: center;
-}
-
-.lyrics-container {
-  position: relative;
-  height: 5rem;
-  overflow: hidden;
-}
-
-.lyrics-text {
-  position: absolute;
-  width: 100%;
-  text-align: center;
-  padding: 0 1rem;
-  color: white;
-  font-size: 1.5rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }

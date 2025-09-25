@@ -20,5 +20,5 @@ export interface SongDetail {
   foto_album: string;
   duracion: number;
   lyrics: Lyric[];
-  fotografias?: Array<{ time: number; text: string }>;
+  fotografias?: Array<{ time: number; text: string; description: string }>;
 }

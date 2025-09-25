@@ -1,7 +1,6 @@
 "use client";
-import { useSearchParams } from "next/navigation";
+// import { useSearchParams } from "next/navigation";
 import React, { useState, useRef, useEffect, useCallback } from "react";
-import Image from "next/image";
 import "../css/index.css";
 import { PowerToggle } from "./player/PowerToggle";
 import { VolumeControls } from "./player/VolumeControls";
@@ -9,9 +8,10 @@ import { TimeSlider } from "./player/TimeSlider";
 import { PlaybackControls } from "./player/PlaybackControls";
 import { SongsList } from "./player/SongsList";
 import { Header } from "./player/Header";
-import { LyricsView } from "./player/LyricsView";
 import { PhotoCueView } from "./player/PhotoCueView";
 import { Lyric, SongDetail, SongSummary } from "./player/types";
+import { RotatingDisc } from "./player/RotatingDisc";
+import { LyricsView } from "./player/LyricsView";
 
 interface AudioElement extends HTMLAudioElement {
   currentTime: number;
@@ -56,8 +56,8 @@ const getCookie = (key: string): string | null => {
 };
 
 const LyricsPlayer: React.FC = () => {
-  const searchParams = useSearchParams();
-  const nombre = searchParams.get("14");
+  // const searchParams = useSearchParams();
+  // const nombre = searchParams.get("14");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
   const [isPoweredOn, setIsPoweredOn] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
@@ -329,95 +329,169 @@ const LyricsPlayer: React.FC = () => {
   // Internal UI moved to dedicated components under ./player
 
   return (
-    <div className="music-player">
+    <div
+      className="
+ w-3/4
+    mx-auto 
+    p-2 
+  
+    
+    rounded-2xl 
+    shadow-xl
+  "
+      style={{ background: "linear-gradient(145deg, #8b4513, #5d2f0a)" }}
+    >
       {/* Loader que se muestra mientras el audio se carga */}
       {!isLoaded && (
         <div className="loader-overlay">
           <div className="loader">Cargando mi confesion...</div>
         </div>
       )}
-      <div className="player-container w-full max-w-5xl">
-        {/* Power and top controls row */}
-        <div className="w-full mb-4 flex items-center justify-between">
+      {/* Encabezado con botón de encendido */}
+      <div className="w-full mb-4 flex items-center gap-4">
+        <div className="w-1/10">
           <PowerToggle
             powered={isPoweredOn}
             onToggle={togglePower}
             disabled={!isLoaded}
           />
-          <VolumeControls
-            volume={volume}
-            isMuted={isMuted}
-            onMuteToggle={toggleMute}
-            onVolumeChange={(val) => handleVolumeChange(val)}
-            onIncrease={increaseVolume}
-            onDecrease={decreaseVolume}
-            disabled={!isLoaded || !isPoweredOn}
+        </div>
+        <div className="w-full">
+          <Header
+            title={`${songDetail?.nombre || ""}`}
+            artista={songDetail?.artista || "Cristian Castro"}
+            powered={isPoweredOn}
           />
         </div>
-        <div className="top-section">
-          <div className="disc-container">
-            <Image
-              width={230}
-              height={230}
-              className={`disc-image disc-rotating ${
-                isPlaying ? "playing" : ""
-              }`}
-              src="/img/disc.png"
-              alt="Disco"
-            />
-            <Image
-              width={230}
-              height={230}
-              className="disc-image"
-              src="/img/pin.png"
-              alt="Pin"
+      </div>
+      {/* Grid de 3 columnas */}
+      {/* player-container */}
+      <div className="w-full max-w-6xl grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Columna 1: Disco giratorio */}
+        <div
+          style={{
+            background: "radial-gradient(circle, #2c2c2c, #1a1a1a)",
+            boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.5)",
+          }}
+          className="flex flex-col items-center bg-black justify-center rounded-2xl"
+        >
+          <RotatingDisc 
+            isPlaying={isPlaying} 
+            powered={isPoweredOn}
+            albumImage={songDetail?.foto_album}
+          />
+        </div>
+
+        {/* Columna 2: Información de la canción y controles */}
+        <div className="flex flex-col gap-4">
+          {/* Header con información de la canción */}
+
+          {/* Vista de letras */}
+          <div>
+            <LyricsView
+              text={lyrics[currentLyricIndex]?.text || ""}
+              index={currentLyricIndex}
+              textSize="sm"
+              powered={isPoweredOn}
             />
           </div>
-        </div>
-        <Header
-          title={
-            songDetail
-              ? `${songDetail.nombre} — ${songDetail.artista}`
-              : `Solamente Tu ${nombre}`
-          }
-        />
-        <LyricsView
-          text={lyrics[currentLyricIndex]?.text || ""}
-          index={currentLyricIndex}
-        />
-        {songDetail?.fotografias && (
-          <PhotoCueView
-            currentTime={currentTime}
-            cues={songDetail.fotografias}
-          />
-        )}
-        <div className="controls-section">
-          <TimeSlider
-            currentTime={currentTime}
-            duration={duration}
-            disabled={!isLoaded || !isPoweredOn}
-            onSeek={handleSeek}
-            onDragStart={() => setIsDragging(true)}
-            onDragEnd={() => setIsDragging(false)}
-            formatTime={formatTime}
-          />
-          <PlaybackControls
-            isPlaying={isPlaying}
-            onTogglePlay={togglePlay}
-            onSkipBack={() => skipAudio(-5)}
-            onSkipForward={() => skipAudio(5)}
-            disabled={!isLoaded || !isPoweredOn}
-          />
-        </div>
-        {/* Songs list moved to bottom */}
-        <SongsList
-          songs={songs}
-          selectedSongId={selectedSong?.id ?? null}
-          onSelect={setSelectedSong}
-          disabled={!isLoaded || !isPoweredOn}
-        />
-      </div>
 
+          {/* Panel de controles */}
+          <div
+            style={{
+              background: "radial-gradient(circle, #2c2c2c, #1a1a1a)",
+              boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.5)",
+            }}
+            className="bg-gradient-to-r from-amber-900/20 to-amber-800/20 rounded-lg p-4 border border-amber-700/30"
+          >
+            {/* Controles de reproducción */}
+            <div className="flex items-center justify-center gap-4 mb-4">
+              <PlaybackControls
+                isPlaying={isPlaying}
+                onTogglePlay={togglePlay}
+                onSkipBack={() => skipAudio(-5)}
+                onSkipForward={() => skipAudio(5)}
+                disabled={!isLoaded || !isPoweredOn}
+                onMuteToggle={toggleMute}
+                isMuted={isMuted}
+                volume={volume}
+                compact
+                powered={isPoweredOn}
+              />
+            </div>
+
+            {/* Timeline y controles de tiempo */}
+            <div className="flex flex-col gap-3">
+              <TimeSlider
+                currentTime={currentTime}
+                duration={duration}
+                disabled={!isLoaded || !isPoweredOn}
+                onSeek={handleSeek}
+                onDragStart={() => setIsDragging(true)}
+                onDragEnd={() => setIsDragging(false)}
+                formatTime={formatTime}
+                compact
+                powered={isPoweredOn}
+              />
+
+              {/* Controles de volumen */}
+              <div className="flex items-center justify-center">
+                <VolumeControls
+                  volume={volume}
+                  onVolumeChange={(val) => handleVolumeChange(val)}
+                  onIncrease={increaseVolume}
+                  onDecrease={decreaseVolume}
+                  disabled={!isLoaded || !isPoweredOn}
+                  compact
+                  powered={isPoweredOn}
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Columna 3: Galería de fotografías */}
+        <div
+          className="flex flex-col items-center justify-center rounded-2xl p-0"
+          style={{
+            background: "radial-gradient(circle, #2c2c2c, #1a1a1a)",
+            boxShadow: "inset 0 4px 8px rgba(0, 0, 0, 0.5)",
+          }}
+        >
+          {songDetail?.fotografias ? (
+            <PhotoCueView
+              currentTime={currentTime}
+              cues={songDetail.fotografias}
+              powered={isPoweredOn}
+            />
+          ) : (
+            <div className="text-amber-100/50 text-center">
+              <p>No hay imágenes disponibles</p>
+              <p className="text-sm mt-1">para esta canción</p>
+            </div>
+          )}
+        </div>
+      </div>
+      {/* Sección inferior: Lista de canciones */}
+      <div className="w-full mt-8">
+        <div className="bg-gradient-to-r from-amber-900/10 to-amber-800/10 rounded-lg p-6 border border-amber-700/20">
+          {/* <div className="text-center mb-6">
+            <h2 className="text-xl font-bold text-amber-200 mb-2">
+              Lista de Reproducción
+            </h2>
+            <p className="text-amber-100/70 text-sm">
+              Selecciona una canción para reproducir
+            </p>
+          </div> */}
+          <SongsList
+            songs={songs}
+            selectedSongId={selectedSong?.id ?? null}
+            onSelect={setSelectedSong}
+            disabled={!isLoaded || !isPoweredOn}
+            powered={isPoweredOn}
+          />
+        </div>
+      </div>
       <audio
         ref={audioRef}
         src={

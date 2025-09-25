@@ -2,7 +2,7 @@
   "nombre": "Solamente Tú",
   "artista": "Cristian Castro",
   "pista": "/music/simplemente-tu.mp3",
-  "foto_album": "https://upload.wikimedia.org/wikipedia/en/5/5e/Ed_Sheeran_-_Divide.png",
+  "foto_album": "/pistas/img/simplemente-tu.png",
   "duracion": 233,
   "lyrics": [
     { "time": 0, "text": "🎹 🎹 🎹 🎹" },
@@ -74,67 +74,83 @@
   "fotografias": [
     {
       "time": 0,
-      "text": "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800"
+      "text": "https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 15,
-      "text": "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800"
+      "text": "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 30,
-      "text": "https://images.unsplash.com/photo-1529397938791-2aba4681454f?w=800"
+      "text": "https://images.unsplash.com/photo-1529397938791-2aba4681454f?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 45,
-      "text": "https://images.unsplash.com/photo-1471970471555-19d4b113e9ed?w=800"
+      "text": "https://images.unsplash.com/photo-1471970471555-19d4b113e9ed?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 60,
-      "text": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800"
+      "text": "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 75,
-      "text": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800"
+      "text": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 90,
-      "text": "https://images.unsplash.com/photo-1502935508-5678b3503ca5?w=800"
+      "text": "https://images.unsplash.com/photo-1502935508-5678b3503ca5?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 105,
-      "text": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800"
+      "text": "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 120,
-      "text": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=800"
+      "text": "https://images.unsplash.com/photo-1516589091380-5d8e87df6999?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 135,
-      "text": "https://images.unsplash.com/photo-1414490929659-9a12b7e31907?w=800"
+      "text": "https://images.unsplash.com/photo-1414490929659-9a12b7e31907?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 150,
-      "text": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800"
+      "text": "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 165,
-      "text": "https://images.unsplash.com/photo-1484399172022-72a90b12e3c1?w=800"
+      "text": "https://images.unsplash.com/photo-1484399172022-72a90b12e3c1?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 180,
-      "text": "https://images.unsplash.com/photo-1516880711640-ef7db81be3e1?w=800"
+      "text": "https://images.unsplash.com/photo-1516880711640-ef7db81be3e1?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 195,
-      "text": "https://images.unsplash.com/photo-1567589555002-ca8f1810f73b?w=800"
+      "text": "https://images.unsplash.com/photo-1567589555002-ca8f1810f73b?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 210,
-      "text": "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=800"
+      "text": "https://images.unsplash.com/photo-1515003197210-e0cd71810b5f?w=800",
+      "description": "Foto de la canción"
     },
     {
       "time": 225,
-      "text": "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=800"
+      "text": "https://images.unsplash.com/photo-1492633423870-43d1cd2775eb?w=800",
+      "description": "Foto de la canción"
     }
   ]
 }

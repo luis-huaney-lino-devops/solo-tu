@@ -1,0 +1,220 @@
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Fredoka:wght@300;400;500;600;700&display=swap");
+
+/* Karaoke Screen Container */
+.karaoke-screen {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  background: linear-gradient(135deg, #2c1810 0%, #1a0f08 50%, #0f0704 100%);
+  border-radius: 15px;
+  border: 2px solid #d4af37;
+  box-shadow: 
+    0 0 20px rgba(212, 175, 55, 0.4),
+    inset 0 0 20px rgba(212, 175, 55, 0.1);
+  overflow: hidden;
+}
+
+/* Animated Background Pattern */
+.karaoke-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(212, 175, 55, 0.15),
+    transparent
+  );
+  animation: scanline 3s linear infinite;
+}
+
+@keyframes scanline {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Lyrics Container */
+.lyrics-section {
+  width: 100%;
+  font-family: "Fredoka", "Dancing Script", cursive;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.lyrics-container {
+  position: relative;
+  height: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Main Lyrics Text */
+.lyrics-text {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  padding: 0 1rem;
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #f4e4bc;
+  text-shadow: 
+    0 0 1px rgba(244, 228, 188, 0.9),
+    0 0 2px rgba(212, 175, 55, 0.7),
+    1px 1px 2px rgba(0, 0, 0, 0.8);
+  animation: textGlow 2s ease-in-out infinite alternate;
+  filter: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 
+      0 0 1px rgba(244, 228, 188, 0.9),
+      0 0 2px rgba(212, 175, 55, 0.7),
+      1px 1px 2px rgba(0, 0, 0, 0.8);
+  }
+  to {
+    text-shadow: 
+      0 0 2px rgba(244, 228, 188, 1),
+      0 0 3px rgba(212, 175, 55, 0.9),
+      1px 1px 2px rgba(0, 0, 0, 0.8);
+  }
+}
+
+/* Karaoke Highlight Effect */
+.lyrics-highlight {
+  background: linear-gradient(
+    90deg,
+    #d4af37 0%,
+    #f4e4bc 25%,
+    #daa520 50%,
+    #b8860b 75%,
+    #cd853f 100%
+  );
+  background-size: 400% 100%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: rainbowText 2s linear infinite;
+  filter: none;
+}
+
+@keyframes rainbowText {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+/* Bouncing Ball Indicator */
+.karaoke-ball {
+  position: absolute;
+  top: -10px;
+  left: 0;
+  width: 12px;
+  height: 12px;
+  background: radial-gradient(circle, #d4af37 0%, #b8860b 100%);
+  border-radius: 50%;
+  box-shadow: 
+    0 0 10px rgba(212, 175, 55, 0.8),
+    0 0 20px rgba(184, 134, 11, 0.6);
+  animation: bounce 0.6s ease-in-out infinite alternate;
+  z-index: 3;
+}
+
+@keyframes bounce {
+  from {
+    transform: translateY(0px) scale(1);
+  }
+  to {
+    transform: translateY(-8px) scale(1.2);
+  }
+}
+
+/* Progress Bar */
+.karaoke-progress {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.karaoke-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #d4af37, #f4e4bc, #b8860b);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  box-shadow: 0 0 10px rgba(212, 175, 55, 0.6);
+}
+
+/* Sparkle Effects */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #d4af37;
+  border-radius: 50%;
+  animation: sparkle 1.5s linear infinite;
+  box-shadow: 0 0 6px rgba(212, 175, 55, 0.8);
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Corner Decorations */
+.karaoke-screen::after {
+  content: '♪ ♫ ♪';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: rgba(212, 175, 55, 0.7);
+  font-size: 14px;
+  animation: musicNotes 3s ease-in-out infinite;
+}
+
+@keyframes musicNotes {
+  0%, 100% {
+    opacity: 0.6;
+    transform: translateY(0px);
+  }
+  50% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .lyrics-text {
+    font-size: 1.2rem;
+  }
+  
+  .karaoke-screen {
+    height: 180px;
+  }
+  
+  .lyrics-container {
+    padding: 15px;
+  }
+}
