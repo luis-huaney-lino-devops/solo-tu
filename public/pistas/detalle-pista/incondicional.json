@@ -1,0 +1,82 @@
+{
+  "nombre": "La Incondicional",
+  "artista": "Luis Miguel",
+  "pista": "/music/la-incondicional.mp3",
+  "foto_album": "https://upload.wikimedia.org/wikipedia/en/8/85/Luis_Miguel_-_Busca_una_Mujer.jpg",
+  "duracion": 240,
+  "lyrics": [
+    { "time": 0, "text": "Tú, la misma, siempre tú" },
+    { "time": 6, "text": "Amistad, ternura, ¿qué sé yo?" },
+    { "time": 12, "text": "Tú, mi sombra has sido tú" },
+    { "time": 18, "text": "La historia de un amor" },
+    { "time": 22, "text": "Que no fue nada" },
+
+    { "time": 30, "text": "Tú, mi eternamente tú" },
+    { "time": 36, "text": "Un hotel, tu cuerpo y un adiós" },
+    { "time": 42, "text": "Tú, mi oculta amiga, tú" },
+    { "time": 48, "text": "Un golpe de pasión" },
+    { "time": 52, "text": "Amor de madrugada" },
+
+    { "time": 60, "text": "No existe un lazo entre tú y yo" },
+    { "time": 66, "text": "Nada de amores" },
+    { "time": 70, "text": "Nada de nada" },
+
+    { "time": 78, "text": "Tú, la misma de ayer" },
+    { "time": 83, "text": "La incondicional" },
+    { "time": 88, "text": "La que no espera nada" },
+    { "time": 93, "text": "Tú, la misma de ayer" },
+    { "time": 98, "text": "La que no supe amar" },
+    { "time": 104, "text": "No sé por qué" },
+
+    { "time": 112, "text": "Tú, intensamente tú" },
+    { "time": 118, "text": "Soledad, cariño, ¿yo qué sé?" },
+    { "time": 124, "text": "Tú, mis horas bajas, tú" },
+    { "time": 130, "text": "Un cuerpo de mujer" },
+    { "time": 134, "text": "Un par de rosas blancas" },
+
+    { "time": 142, "text": "No existe un lazo entre tú y yo" },
+    { "time": 148, "text": "No hubo promesas" },
+    { "time": 152, "text": "Ni juramentos" },
+    { "time": 156, "text": "Nada de nada" },
+
+    { "time": 164, "text": "Tú, la misma de ayer" },
+    { "time": 169, "text": "La incondicional" },
+    { "time": 174, "text": "La que no espera nada" },
+    { "time": 179, "text": "Tú, la misma de ayer" },
+    { "time": 184, "text": "La que no supe amar" },
+    { "time": 190, "text": "No sé por qué" },
+
+    { "time": 198, "text": "Amiga, tú, la misma de ayer" },
+    { "time": 204, "text": "La incondicional" },
+    { "time": 210, "text": "La que no espera nada" },
+    { "time": 216, "text": "Tú, la misma de ayer" },
+    { "time": 221, "text": "La que no supe amar (no sé por qué)" },
+
+    { "time": 228, "text": "Tú (la misma de ayer), solo tú" },
+    { "time": 232, "text": "(La incondicional) solo tú" },
+    { "time": 236, "text": "(La que no espera nada) la que no espera nada" },
+    { "time": 240, "text": "Tú (la misma de ayer)... 🎶" }
+  ],
+  "fotografias": [
+    {
+      "time": 0,
+      "text": "https://upload.wikimedia.org/wikipedia/en/8/85/Luis_Miguel_-_Busca_una_Mujer.jpg"
+    },
+    {
+      "time": 60,
+      "text": "https://upload.wikimedia.org/wikipedia/en/8/85/Luis_Miguel_-_Busca_una_Mujer.jpg"
+    },
+    {
+      "time": 120,
+      "text": "https://upload.wikimedia.org/wikipedia/en/8/85/Luis_Miguel_-_Busca_una_Mujer.jpg"
+    },
+    {
+      "time": 180,
+      "text": "https://upload.wikimedia.org/wikipedia/en/8/85/Luis_Miguel_-_Busca_una_Mujer.jpg"
+    },
+    {
+      "time": 240,
+      "text": "https://upload.wikimedia.org/wikipedia/en/8/85/Luis_Miguel_-_Busca_una_Mujer.jpg"
+    }
+  ]
+}

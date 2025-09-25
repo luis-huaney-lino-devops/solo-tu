@@ -1,0 +1,57 @@
+{
+    "musicas": [{
+            "id": 1,
+            "titulo": "Solamente Tú",
+            "artista": "Cristian Castro",
+            "pista": "/music/simplemente-tu.mp3",
+            "foto_album": "https://upload.wikimedia.org/wikipedia/en/5/5e/Ed_Sheeran_-_Divide.png",
+            "detalle_datos_musica": "/pistas/detalle-pista/solamente-tu.json",
+            "duracion": 233
+        },
+        {
+            "id": 2,
+            "titulo": "Blinding Lights",
+            "artista": "The Weeknd",
+            "pista": "/music/blinding-lights.mp3",
+            "foto_album": "https://upload.wikimedia.org/wikipedia/en/0/09/The_Weeknd_-_After_Hours.png",
+            "detalle_datos_musica": "/pistas/detalle-pista/blinding-lights.json",
+            "duracion": 200
+        },
+        {
+            "id": 3,
+            "titulo": "Levitating",
+            "artista": "Dua Lipa",
+            "pista": "/music/levitating.mp3",
+            "foto_album": "https://upload.wikimedia.org/wikipedia/en/f/f5/Dua_Lipa_-_Future_Nostalgia_%28Official_Album_Cover%29.png",
+            "detalle_datos_musica": "/pistas/detalle-pista/levitating.json",
+            "duracion": 203
+        },
+        {
+            "id": 4,
+            "titulo": "Someone Like You",
+            "artista": "Adele",
+            "pista": "/music/someone-like-you.mp3",
+            "foto_album": "https://upload.wikimedia.org/wikipedia/en/1/1b/Adele_-_21.png",
+            "detalle_datos_musica": "/pistas/detalle-pista/someone-like-you.json",
+            "duracion": 285
+        },
+        {
+            "id": 5,
+            "titulo": "Viva La Vida",
+            "artista": "Coldplay",
+            "pista": "/music/viva-la-vida.mp3",
+            "foto_album": "https://upload.wikimedia.org/wikipedia/en/6/6a/Coldplay_-_Viva_la_Vida_or_Death_and_All_His_Friends.png",
+            "detalle_datos_musica": "/pistas/detalle-pista/viva-la-vida.json",
+            "duracion": 242
+        },
+        {
+            "id": 6,
+            "titulo": "incondicional",
+            "artista": "Luis Miguel",
+            "pista": "/music/incondicional.mp3",
+            "foto_album": "https://upload.wikimedia.org/wikipedia/en/5/5e/Luis_Miguel_-_Incondicional.png",
+            "detalle_datos_musica": "/pistas/detalle-pista/incondicional.json",
+            "duracion": 233
+        }
+    ]
+}

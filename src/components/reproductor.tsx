@@ -1,22 +1,17 @@
 "use client";
 import { useSearchParams } from "next/navigation";
-import React, { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  Volume2,
-  VolumeX,
-  SkipBack,
-  SkipForward,
-  Play,
-  Pause,
-  Volume1,
-  Volume,
-  Plus,
-  Minus,
-} from "lucide-react";
-import { lyrics, Lyric } from "../data/lyrics";
-import "../css/index.css";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import Image from "next/image";
+import "../css/index.css";
+import { PowerToggle } from "./player/PowerToggle";
+import { VolumeControls } from "./player/VolumeControls";
+import { TimeSlider } from "./player/TimeSlider";
+import { PlaybackControls } from "./player/PlaybackControls";
+import { SongsList } from "./player/SongsList";
+import { Header } from "./player/Header";
+import { LyricsView } from "./player/LyricsView";
+import { PhotoCueView } from "./player/PhotoCueView";
+import { Lyric, SongDetail, SongSummary } from "./player/types";
 
 interface AudioElement extends HTMLAudioElement {
   currentTime: number;
@@ -26,6 +21,8 @@ interface LocalStorageItem {
   value: string;
   expiry: number;
 }
+
+// Types moved to ./player/types
 
 const formatTime = (seconds: number): string => {
   const minutes = Math.floor(seconds / 60);
@@ -62,6 +59,7 @@ const LyricsPlayer: React.FC = () => {
   const searchParams = useSearchParams();
   const nombre = searchParams.get("14");
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
+  const [isPoweredOn, setIsPoweredOn] = useState<boolean>(false);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
   const [currentLyricIndex, setCurrentLyricIndex] = useState<number>(0);
@@ -70,45 +68,190 @@ const LyricsPlayer: React.FC = () => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
   const audioRef = useRef<AudioElement | null>(null);
+  const [songs, setSongs] = useState<SongSummary[]>([]);
+  const [selectedSong, setSelectedSong] = useState<SongSummary | null>(null);
+  const [songDetail, setSongDetail] = useState<SongDetail | null>(null);
+  const [lyrics, setLyrics] = useState<Lyric[]>([]);
+
+  // Stable callbacks used across effects
+  const updateCurrentLyric = useCallback(
+    (time: number): void => {
+      const index = lyrics.findIndex((lyric: Lyric, i: number) => {
+        const nextTime = lyrics[i + 1]?.time ?? Infinity;
+        return time >= lyric.time && time < nextTime;
+      });
+      if (index !== -1) setCurrentLyricIndex(index);
+    },
+    [lyrics]
+  );
+
+  const playAudio = useCallback(() => {
+    if (audioRef.current && isLoaded && isPoweredOn) {
+      const playPromise = audioRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setIsPlaying(true);
+            setCookie("radioPlayState", "playing", 7);
+          })
+          .catch((error) => {
+            console.error("Error playing audio:", error);
+          });
+      }
+    }
+  }, [isLoaded, isPoweredOn]);
+
+  const pauseAudio = useCallback(() => {
+    if (audioRef.current) {
+      audioRef.current.pause();
+      setIsPlaying(false);
+      setCookie("radioPlayState", "paused", 7);
+    }
+  }, []);
+
+  const toggleMute = useCallback(() => {
+    if (audioRef.current) {
+      const newMuteState = !isMuted;
+      audioRef.current.muted = newMuteState;
+      setIsMuted(newMuteState);
+      setCookie("radioMute", newMuteState.toString(), 7);
+    }
+  }, [isMuted]);
+
+  const handleVolumeChange = useCallback(
+    (newVolume: number) => {
+      if (audioRef.current) {
+        const volumeValue = newVolume / 100;
+        audioRef.current.volume = volumeValue;
+        setVolume(newVolume);
+        setCookie("radioVolume", volumeValue.toString(), 7);
+
+        // Si el volumen se pone a 0, se activa el mute
+        if (newVolume === 0 && !isMuted) {
+          toggleMute();
+        }
+        // Si se aumenta el volumen desde 0, se desactiva el mute
+        else if (newVolume > 0 && isMuted) {
+          toggleMute();
+        }
+      }
+    },
+    [isMuted, toggleMute]
+  );
+
+  const togglePlay = useCallback(() => {
+    if (!isPoweredOn) return;
+    if (isPlaying) {
+      pauseAudio();
+    } else {
+      playAudio();
+    }
+  }, [isPoweredOn, isPlaying, pauseAudio, playAudio]);
+
+  const skipAudio = useCallback(
+    (seconds: number) => {
+      if (audioRef.current && isLoaded) {
+        const newTime = audioRef.current.currentTime + seconds;
+        audioRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
+      }
+    },
+    [isLoaded, duration]
+  );
+
+  // duplicate removed; skipAudio defined earlier
 
   useEffect(() => {
+    const audioEl = audioRef.current;
     const handleTimeUpdate = () => {
-      if (audioRef.current && !isDragging) {
-        setCurrentTime(audioRef.current.currentTime);
-        updateCurrentLyric(audioRef.current.currentTime);
+      if (audioEl && !isDragging) {
+        setCurrentTime(audioEl.currentTime);
+        updateCurrentLyric(audioEl.currentTime);
       }
     };
 
     const handleLoadedMetadata = () => {
-      if (audioRef.current) {
-        setDuration(audioRef.current.duration);
+      if (audioEl) {
+        setDuration(audioEl.duration);
         setIsLoaded(true);
-        audioRef.current.volume = volume / 100;
+        audioEl.volume = volume / 100;
       }
     };
 
-    if (audioRef.current) {
-      audioRef.current.addEventListener("timeupdate", handleTimeUpdate);
-      audioRef.current.addEventListener("loadedmetadata", handleLoadedMetadata);
-      audioRef.current.addEventListener("canplay", handleLoadedMetadata);
+    if (audioEl) {
+      audioEl.addEventListener("timeupdate", handleTimeUpdate);
+      audioEl.addEventListener("loadedmetadata", handleLoadedMetadata);
+      audioEl.addEventListener("canplay", handleLoadedMetadata);
     }
 
     return () => {
-      if (audioRef.current) {
-        audioRef.current.removeEventListener("timeupdate", handleTimeUpdate);
-        audioRef.current.removeEventListener(
-          "loadedmetadata",
-          handleLoadedMetadata
-        );
-        audioRef.current.removeEventListener("canplay", handleLoadedMetadata);
+      if (audioEl) {
+        audioEl.removeEventListener("timeupdate", handleTimeUpdate);
+        audioEl.removeEventListener("loadedmetadata", handleLoadedMetadata);
+        audioEl.removeEventListener("canplay", handleLoadedMetadata);
       }
     };
-  }, [isDragging, volume]);
+  }, [isDragging, volume, updateCurrentLyric]);
+
+  // Load songs list from public JSON
+  useEffect(() => {
+    const loadSongs = async () => {
+      try {
+        const response = await fetch("/pistas/Canciones.json", {
+          cache: "no-store",
+        });
+        const data = await response.json();
+        const list: SongSummary[] = Array.isArray(data?.musicas)
+          ? data.musicas
+          : [];
+        setSongs(list);
+        if (list.length > 0) {
+          setSelectedSong(list[0]);
+        }
+      } catch (error) {
+        console.error("Error loading songs list:", error);
+      }
+    };
+    loadSongs();
+  }, []);
+
+  // Load selected song detail
+  useEffect(() => {
+    const loadDetail = async () => {
+      if (!selectedSong) return;
+      setIsLoaded(false);
+      setCurrentTime(0);
+      setCurrentLyricIndex(0);
+      setDuration(0);
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      setIsPlaying(false);
+      try {
+        const response = await fetch(selectedSong.detalle_datos_musica, {
+          cache: "no-store",
+        });
+        const detail: SongDetail = await response.json();
+        setSongDetail(detail);
+        setLyrics(detail.lyrics || []);
+        // If we already had metadata for duration in list, prefer audio's real duration on load
+        // The audio element will update duration on metadata load
+        if (audioRef.current) {
+          audioRef.current.load();
+        }
+      } catch (error) {
+        console.error("Error loading song detail:", error);
+        setSongDetail(null);
+        setLyrics([]);
+      }
+    };
+    loadDetail();
+  }, [selectedSong]);
 
   // Controles por teclado
   useEffect(() => {
     const handleKeyPress = (e: KeyboardEvent) => {
-      if (!isLoaded) return;
+      if (!isLoaded || !isPoweredOn) return;
 
       switch (e.code) {
         case "Space":
@@ -136,7 +279,16 @@ const LyricsPlayer: React.FC = () => {
     };
     window.addEventListener("keydown", handleKeyPress);
     return () => window.removeEventListener("keydown", handleKeyPress);
-  }, [isLoaded, volume, isPlaying]);
+  }, [
+    isLoaded,
+    isPoweredOn,
+    volume,
+    isPlaying,
+    togglePlay,
+    toggleMute,
+    handleVolumeChange,
+    skipAudio,
+  ]);
 
   useEffect(() => {
     const savedVolume = getCookie("radioVolume");
@@ -146,70 +298,12 @@ const LyricsPlayer: React.FC = () => {
     if (savedMute) setIsMuted(savedMute === "true");
   }, []);
 
-  const updateCurrentLyric = (time: number): void => {
-    const index = lyrics.findIndex((lyric: Lyric, i: number) => {
-      const nextTime = lyrics[i + 1]?.time ?? Infinity;
-      return time >= lyric.time && time < nextTime;
-    });
-    if (index !== -1) setCurrentLyricIndex(index);
-  };
-
-  const playAudio = () => {
-    if (audioRef.current && isLoaded) {
-      const playPromise = audioRef.current.play();
-      if (playPromise !== undefined) {
-        playPromise
-          .then(() => {
-            setIsPlaying(true);
-            setCookie("radioPlayState", "playing", 7);
-          })
-          .catch((error) => {
-            console.error("Error playing audio:", error);
-          });
-      }
-    }
-  };
-
-  const pauseAudio = () => {
-    if (audioRef.current) {
+  const togglePower = () => {
+    const next = !isPoweredOn;
+    setIsPoweredOn(next);
+    if (!next && audioRef.current) {
       audioRef.current.pause();
       setIsPlaying(false);
-      setCookie("radioPlayState", "paused", 7);
-    }
-  };
-
-  const togglePlay = () => {
-    if (isPlaying) {
-      pauseAudio();
-    } else {
-      playAudio();
-    }
-  };
-
-  const handleVolumeChange = (newVolume: number) => {
-    if (audioRef.current) {
-      const volumeValue = newVolume / 100;
-      audioRef.current.volume = volumeValue;
-      setVolume(newVolume);
-      setCookie("radioVolume", volumeValue.toString(), 7);
-
-      // Si el volumen se pone a 0, se activa el mute
-      if (newVolume === 0 && !isMuted) {
-        toggleMute();
-      }
-      // Si se aumenta el volumen desde 0, se desactiva el mute
-      else if (newVolume > 0 && isMuted) {
-        toggleMute();
-      }
-    }
-  };
-
-  const toggleMute = () => {
-    if (audioRef.current) {
-      const newMuteState = !isMuted;
-      audioRef.current.muted = newMuteState;
-      setIsMuted(newMuteState);
-      setCookie("radioMute", newMuteState.toString(), 7);
     }
   };
 
@@ -224,13 +318,6 @@ const LyricsPlayer: React.FC = () => {
     }
   };
 
-  const skipAudio = (seconds: number) => {
-    if (audioRef.current && isLoaded) {
-      const newTime = audioRef.current.currentTime + seconds;
-      audioRef.current.currentTime = Math.max(0, Math.min(newTime, duration));
-    }
-  };
-
   const increaseVolume = () => {
     handleVolumeChange(Math.min(100, volume + 5));
   };
@@ -239,44 +326,7 @@ const LyricsPlayer: React.FC = () => {
     handleVolumeChange(Math.max(0, volume - 5));
   };
 
-  const renderLyric = (
-    index: number,
-    status: "current" | "previous" | "next"
-  ) => {
-    const variants = {
-      enter: { opacity: 0, y: 20 },
-      center: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5 },
-      },
-      exit: {
-        opacity: 0,
-        y: -20,
-        transition: { duration: 0.3 },
-      },
-    };
-
-    return (
-      <motion.div
-        key={`${index}-${status}`}
-        initial="enter"
-        animate="center"
-        exit="exit"
-        variants={variants}
-        className="lyrics-text"
-      >
-        {lyrics[index]?.text || ""}
-      </motion.div>
-    );
-  };
-
-  const getVolumeIcon = () => {
-    if (isMuted || volume === 0) return <VolumeX />;
-    if (volume < 30) return <Volume />;
-    if (volume < 70) return <Volume1 />;
-    return <Volume2 />;
-  };
+  // Internal UI moved to dedicated components under ./player
 
   return (
     <div className="music-player">
@@ -286,7 +336,24 @@ const LyricsPlayer: React.FC = () => {
           <div className="loader">Cargando mi confesion...</div>
         </div>
       )}
-      <div className="player-container">
+      <div className="player-container w-full max-w-5xl">
+        {/* Power and top controls row */}
+        <div className="w-full mb-4 flex items-center justify-between">
+          <PowerToggle
+            powered={isPoweredOn}
+            onToggle={togglePower}
+            disabled={!isLoaded}
+          />
+          <VolumeControls
+            volume={volume}
+            isMuted={isMuted}
+            onMuteToggle={toggleMute}
+            onVolumeChange={(val) => handleVolumeChange(val)}
+            onIncrease={increaseVolume}
+            onDecrease={decreaseVolume}
+            disabled={!isLoaded || !isPoweredOn}
+          />
+        </div>
         <div className="top-section">
           <div className="disc-container">
             <Image
@@ -306,109 +373,65 @@ const LyricsPlayer: React.FC = () => {
               alt="Pin"
             />
           </div>
-
-          <div className="volume-controls">
-            <button
-              title="Mutear (M)"
-              onClick={toggleMute}
-              className="player-button"
-              disabled={!isLoaded}
-            >
-              {getVolumeIcon()}
-            </button>
-            <button
-              title="Bajar Volumen (Flecha abajo)"
-              onClick={decreaseVolume}
-              className="player-button"
-              disabled={!isLoaded}
-            >
-              <Minus />
-            </button>
-            <input
-              type="range"
-              className="volume-slider"
-              min="0"
-              max="100"
-              value={volume}
-              onChange={(e) => handleVolumeChange(Number(e.target.value))}
-              disabled={!isLoaded}
-            />
-            <button
-              title="Subir Volumen (Flecha arriba)"
-              onClick={increaseVolume}
-              className="player-button"
-              disabled={!isLoaded}
-            >
-              <Plus />
-            </button>
-            <span className="volume-label">{Math.round(volume)}%</span>
-          </div>
         </div>
-        <div className="card__subtitle">Solamente Tu {nombre}</div>
-        <div className="lyrics-section">
-          <div className="lyrics-container">
-            <AnimatePresence mode="popLayout">
-              {renderLyric(currentLyricIndex, "current")}
-            </AnimatePresence>
-          </div>
-        </div>
+        <Header
+          title={
+            songDetail
+              ? `${songDetail.nombre} — ${songDetail.artista}`
+              : `Solamente Tu ${nombre}`
+          }
+        />
+        <LyricsView
+          text={lyrics[currentLyricIndex]?.text || ""}
+          index={currentLyricIndex}
+        />
+        {songDetail?.fotografias && (
+          <PhotoCueView
+            currentTime={currentTime}
+            cues={songDetail.fotografias}
+          />
+        )}
         <div className="controls-section">
-          <div className="time-slider-container">
-            <span className="time-label">{formatTime(currentTime)}</span>
-            <input
-              type="range"
-              className="time-slider"
-              min="0"
-              max={duration || 0}
-              value={currentTime}
-              onChange={handleSeek}
-              onMouseDown={() => setIsDragging(true)}
-              onMouseUp={() => setIsDragging(false)}
-              disabled={!isLoaded}
-            />
-            <span className="time-label">{formatTime(duration)}</span>
-          </div>
-
-          <div className="playback-controls">
-            <button
-              title="Retroceder 5 seg. (←)"
-              onClick={() => skipAudio(-5)}
-              className="player-button"
-              disabled={!isLoaded}
-            >
-              <SkipBack />
-            </button>
-
-            <button
-              title={isPlaying ? "Pausar (Espacio)" : "Reproducir (Espacio)"}
-              onClick={togglePlay}
-              className="player-button play-button"
-              disabled={!isLoaded}
-            >
-              {isPlaying ? (
-                <Pause className="w-6 h-6" />
-              ) : (
-                <Play className="w-6 h-6" />
-              )}
-            </button>
-
-            <button
-              title="Adelantar 5 seg. (→)"
-              onClick={() => skipAudio(5)}
-              className="player-button"
-              disabled={!isLoaded}
-            >
-              <SkipForward />
-            </button>
-          </div>
+          <TimeSlider
+            currentTime={currentTime}
+            duration={duration}
+            disabled={!isLoaded || !isPoweredOn}
+            onSeek={handleSeek}
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={() => setIsDragging(false)}
+            formatTime={formatTime}
+          />
+          <PlaybackControls
+            isPlaying={isPlaying}
+            onTogglePlay={togglePlay}
+            onSkipBack={() => skipAudio(-5)}
+            onSkipForward={() => skipAudio(5)}
+            disabled={!isLoaded || !isPoweredOn}
+          />
         </div>
+        {/* Songs list moved to bottom */}
+        <SongsList
+          songs={songs}
+          selectedSongId={selectedSong?.id ?? null}
+          onSelect={setSelectedSong}
+          disabled={!isLoaded || !isPoweredOn}
+        />
       </div>
 
       <audio
         ref={audioRef}
-        src="http://localhost:3000/music/simplemente-tu.mp3"
+        src={
+          songDetail?.pista || "http://localhost:3000/music/simplemente-tu.mp3"
+        }
         className="hidden"
         preload="auto"
+        onLoadedMetadata={() => {
+          if (audioRef.current) {
+            setDuration(audioRef.current.duration);
+            setIsLoaded(true);
+            audioRef.current.volume = volume / 100;
+          }
+        }}
       />
     </div>
   );
